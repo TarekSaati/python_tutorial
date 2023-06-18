@@ -11,8 +11,8 @@ class Book:
 
 # Magazines share many properties with books => It can inherit from 'Book' class
 class Magazine(Book):
-    def __init__(self, name: str, numPages: int, author: str, topics: list):
-        super().__init__(name, numPages, author)
+    def __init__(self, name: str, numPages: int, origin: str, topics: list):
+        super().__init__(name, numPages, origin)
         self.topics = topics
         self.currentTopic = 'news'
 
@@ -29,3 +29,4 @@ print('name of 1st book is: ', book1.name, ' and currentPage is = ', book1.curre
 mag = Magazine('The Guardian', 25, 'USA', ['news', 'sports', 'fashion'])
 mag.navigate(5, topic='sports')
 print('page: ', mag.currentPage, mag.currentTopic)
+    

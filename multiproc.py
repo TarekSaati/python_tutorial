@@ -9,20 +9,26 @@ def init_pool(d_b):
 
 
 def detect_object(frame):
-    time.sleep(1)
+    
+    time.sleep(0.1)
     if not detection_buffer.full():
         detection_buffer.put(frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        return True
+    return False
 
 
 def show():
+    
     while True:
         print('show')
         frame = detection_buffer.get()
         if frame is None:
             break
-        cv2.imshow("Video", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+        cv2.imshow("Video", frame)
     cv2.destroyAllWindows()
 
 
@@ -32,18 +38,21 @@ if __name__ == '__main__':
     show_future = pool.apply_async(show)
     cap = cv2.VideoCapture(0)
     futures = []
-    while True:
+    count = 0
+    while count < 100:
         ret, frame = cap.read()
         if ret:
             f = pool.apply_async(detect_object, args=(frame,))
             futures.append(f)
-            time.sleep(0.025)
-        else:
-            break
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            time.sleep(0.05)
+        count+=1
+
+    for f in futures:
+        f.get()
+
     detection_buffer.put(None)
     show_future.get()
     pool.close()
     pool.join()
+    cv2.destroyAllWindows()
     print('Program Ended')
