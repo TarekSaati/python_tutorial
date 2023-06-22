@@ -1,6 +1,10 @@
 import numpy as np
 import cv2
 import cv2.aruco as aruco
+import argparse
+
+parser = argparse.ArgumentParser(description='AruCo Detection')
+parser.add_argument('--calib-dir', type=str, required=True, help='calibration yml file directory path')
 
 def load_coefficients(path):
     """ Loads camera matrix and distortion coefficients. """
@@ -20,6 +24,7 @@ def load_coefficients(path):
 def track(matrix_coefficients, distortion_coefficients):
     while True:
         ret, frame = cap.read()
+        # wait for the cap object to get ready
         while not ret:
             pass
         # frame = cv2.imread('aruco_marker.png')
@@ -38,7 +43,7 @@ def track(matrix_coefficients, distortion_coefficients):
                 rvec, tvec, markerPoints = aruco.estimatePoseSingleMarkers(corners[i], 0.02, matrix_coefficients,
                                                                            distortion_coefficients)
                 (rvec - tvec).any()  # get rid of that nasty numpy value array error
-                print(tvec)
+                print('AruCo marker at distance ', round(tvec[0][0][2], 2), 'm from camera')
             aruco.drawDetectedMarkers(frame, corners)  # Draw A square around the markers
             aruco.drawAxis(frame, matrix_coefficients, distortion_coefficients, rvec, tvec, 0.01)  # Draw Axis
         # Display the resulting frame
@@ -48,15 +53,14 @@ def track(matrix_coefficients, distortion_coefficients):
         if key == ord('q'):  # Quit
             break
 
-
-
 if __name__ == '__main__':
+    args = parser.parse_args()
     cap = cv2.VideoCapture(0)  # Get the camera source
 
-    path = 'C:/Users/User/.vscode/Projects/odom_camera/calib.yml'
-    [matrix_coefficients, distortion_coefficients] = load_coefficients(path)
-    track(matrix_coefficients, distortion_coefficients)
+    [matrix_coeffs, distortion_coeffs] = load_coefficients(args.calib_dir)
+    track(matrix_coeffs, distortion_coeffs)
 
     # When everything done, release the capture
     cv2.destroyAllWindows()
     cap.release()
+    print('Detection Ended by user')
