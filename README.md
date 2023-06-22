@@ -1,5 +1,5 @@
 # python_tutorial
-An intermidiate level python tutorial files for machine learning students
+An intermediate level python tutorial files for machine learning students.
 # Using AruCo detector:
 To run the Aruco detector from folder 'odom_camera' apply the following:
 - Install python v3.8.0 on your system.
