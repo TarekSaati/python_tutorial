@@ -1,0 +1,18 @@
+{
+    "Laptops": [
+        "HP",
+        "DELL",
+        "ASUS",
+        "ACER"
+    ],
+    "SmartPhones": [
+        "Samsung",
+        "Huawei",
+        "Nokia"
+    ],
+    "TVs": [
+        "Samsung",
+        "LG",
+        "Toshiba"
+    ]
+}
